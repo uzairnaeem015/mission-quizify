@@ -1,6 +1,7 @@
 # embedding_client.py
 
 from langchain_google_vertexai import VertexAIEmbeddings
+import streamlit as st
 
 class EmbeddingClient:
     """
@@ -33,7 +34,12 @@ class EmbeddingClient:
         # Initialize the VertexAIEmbeddings client with the given parameters
         # Read about the VertexAIEmbeddings wrapper from Langchain here
         # https://python.langchain.com/docs/integrations/text_embedding/google_generative_ai
-        self.client = VertexAIEmbeddings(
+
+        self.model_name = model_name
+        self.project = project
+        self.location = location
+       
+        self.client = VertexAIEmbeddings(model_name = model_name, project =  project, location = location
             #### YOUR CODE HERE ####
         )
         
@@ -62,7 +68,7 @@ class EmbeddingClient:
 
 if __name__ == "__main__":
     model_name = "textembedding-gecko@003"
-    project = "YOUR PROJECT ID HERE"
+    project = "gemini-quizify-428916"
     location = "us-central1"
 
     embedding_client = EmbeddingClient(model_name, project, location)
@@ -70,3 +76,4 @@ if __name__ == "__main__":
     if vectors:
         print(vectors)
         print("Successfully used the embedding client!")
+        st.write(vectors)
