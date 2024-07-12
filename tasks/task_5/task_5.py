@@ -1,7 +1,7 @@
 import sys
 import os
 import streamlit as st
-sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath(''))
 from tasks.task_3.task_3 import DocumentProcessor
 from tasks.task_4.task_4 import EmbeddingClient
 
@@ -28,6 +28,7 @@ class ChromaCollectionCreator:
         
         Steps:
         1. Check if any documents have been processed by the DocumentProcessor instance. If not, display an error message using streamlit's error widget.
+        
         
         2. Split the processed documents into text chunks suitable for embedding and indexing. Use the CharacterTextSplitter from Langchain to achieve this. You'll need to define a separator, chunk size, and chunk overlap.
         https://python.langchain.com/docs/modules/data_connection/document_transformers/
@@ -58,13 +59,29 @@ class ChromaCollectionCreator:
         # https://python.langchain.com/docs/modules/data_connection/document_transformers/character_text_splitter
         # [Your code here for splitting documents]
         
+        text_splitter = CharacterTextSplitter(
+            separator="\n\n",
+            chunk_size=1000,
+            chunk_overlap=200,
+            length_function=len,
+            is_separator_regex=False,
+        )
+        texts = []
+        for page in self.processor.pages:
+            text_chunks = text_splitter.split_text(page.page_content)
+            for text in text_chunks:
+                doc =  Document(page_content=text, metadata={"source": "local"}) # Assuming 'content' holds the textual data of each page
+                texts.append(doc)  
+
         if texts is not None:
-            st.success(f"Successfully split pages to {len(texts)} documents!", icon="✅")
+            st.success(f"Successfully split pages to {len(texts)} documents!", icon="✅")  
 
         # Step 3: Create the Chroma Collection
         # https://docs.trychroma.com/
         # Create a Chroma in-memory client using the text chunks and the embeddings model
         # [Your code here for creating Chroma collection]
+
+        self.db = Chroma.from_documents(documents=texts, embedding=self.embed_model)
         
         if self.db:
             st.success("Successfully created Chroma Collection!", icon="✅")
@@ -93,7 +110,7 @@ if __name__ == "__main__":
     
     embed_config = {
         "model_name": "textembedding-gecko@003",
-        "project": "YOUR PROJECT ID HERE",
+        "project": "gemini-quizify-428916",
         "location": "us-central1"
     }
     
