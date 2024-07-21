@@ -186,9 +186,6 @@ class QuizGenerator:
                    is_unique =  False
         
         return is_unique
-        ##### YOUR CODE HERE #####
-        return is_unique
-
 
 # Test Generating the Quiz
 if __name__ == "__main__":
