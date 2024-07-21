@@ -125,7 +125,7 @@ class QuizGenerator:
 
         for _ in range(self.num_questions):
             ##### YOUR CODE HERE #####
-            for _ in range(0,3): #  Try maximum 3 times when the json string could not be converted to a dictionary.
+            for _ in range(0,10): #  Try maximum 10 times when the json string could not be converted to a dictionary.
                 question_str = self.generate_question_with_vectorstore()
                 # Use class method to generate question
                 
